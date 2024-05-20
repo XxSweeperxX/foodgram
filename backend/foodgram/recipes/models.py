@@ -1,20 +1,12 @@
 from django.contrib.auth import get_user_model
+from django.core.validators import RegexValidator
 from django.db import models
 
 
 User = get_user_model()
 
-TAG_CHOICES = (
-    ('Breakfast', 'Завтрак'),
-    ('Lunch', 'Обед'),
-    ('Diner', 'Ужин')
-)
 
-
-class Tag(models.TextChoices):
-    BREAKFAST = 'Завтрак'
-    LUNCH = 'Обед'
-    DINNER = 'Ужин'
+class Tag(models.Model):
 
     title = models.TextField(
         max_length=15,
@@ -23,7 +15,13 @@ class Tag(models.TextChoices):
     slug = models.SlugField(unique=True)
     color = models.CharField(
         max_length=7,
-        unique=True
+        unique=True,
+        validators=[
+            RegexValidator(
+                '^#([a-fA-F0-9]{6})',
+                message="Цвет должен быть задан в HEX-формате"
+            )
+        ]
     )
 
     class Meta:
@@ -35,7 +33,7 @@ class Tag(models.TextChoices):
         return self.title
 
 
-class Ingridient(models.Model):
+class Ingredient(models.Model):
     title = models.TextField()
     measurement_unit = models.CharField(
         max_length=10
@@ -51,6 +49,7 @@ class Ingridient(models.Model):
 
 
 class Recipe(models.Model):
+
     name = models.TextField(
         verbose_name='Название рецепта'
     )
@@ -60,31 +59,33 @@ class Recipe(models.Model):
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
+        related_name='recipes',
         verbose_name='Автор'
     )
     tag = models.ManyToManyField(
         Tag,
-        through='RecipeTag',
-        choices=Tag.choices
+        verbose_name='Теги',
+        related_name='recipes',
     )
     time = models.DurationField(
         verbose_name='Время приготовления'
     )
     ingredients = models.ManyToManyField(
-        Ingridient,
-        through='RecipeIngredient'
+        Ingredient,
+        related_name='recipes',
+        through='RecipeIngredient',
+        verbose_name='Ингридиенты'
     )
     description = models.TextField(
         verbose_name='Описание рецепта'
     )
     image = models.ImageField(
-        'Изображение',
-        upload_to='recipes/images'
+        upload_to='recipes/images',
+        verbose_name='Изображение'
     )
 
     class Meta:
         ordering = ('-pub_date',)
-        default_related_name = 'recipes'
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
 
@@ -106,12 +107,12 @@ class Favourite(models.Model):
 
     class Meta:
         verbose_name = 'Избранное'
-        constraints = (
+        constraints = [
             models.UniqueConstraint(
                 fields=('user', 'recipe'),
                 name='unique_user_favourite_recipe'
             )
-        )
+        ]
 
 
 class Shopping(models.Model):
@@ -128,12 +129,12 @@ class Shopping(models.Model):
 
     class Meta:
         verbose_name = 'Корзина покупок'
-        constraints = (
+        constraints = [
             models.UniqueConstraint(
                 fields=('user', 'recipe'),
                 name='unique_user_shop_recipe'
             )
-        )
+        ]
 
 
 class RecipeTag(models.Model):
@@ -152,7 +153,7 @@ class RecipeTag(models.Model):
 
 class RecipeIngredient(models.Model):
     ingredient = models.ForeignKey(
-        Ingridient,
+        Ingredient,
         on_delete=models.CASCADE
     )
     recipe = models.ForeignKey(
