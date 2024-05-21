@@ -106,7 +106,8 @@ class Favourite(models.Model):
     )
 
     class Meta:
-        verbose_name = 'Избранное'
+        verbose_name = 'Список избранных рецептов'
+        verbose_name_plural = 'Списки избранных рецептов'
         constraints = [
             models.UniqueConstraint(
                 fields=('user', 'recipe'),
@@ -128,7 +129,8 @@ class Shopping(models.Model):
     )
 
     class Meta:
-        verbose_name = 'Корзина покупок'
+        verbose_name = 'Корзину покупок'
+        verbose_name_plural = 'Корзины покупок'
         constraints = [
             models.UniqueConstraint(
                 fields=('user', 'recipe'),
@@ -147,6 +149,10 @@ class RecipeTag(models.Model):
         on_delete=models.CASCADE
     )
 
+    class Meta:
+        verbose_name = 'Тег рецепта'
+        verbose_name_plural = 'Теги рецептов'
+
     def __str__(self):
         return f'{self.tag}, {self.recipe}'
 
@@ -161,6 +167,10 @@ class RecipeIngredient(models.Model):
         on_delete=models.CASCADE
     )
     amount = models.IntegerField()
+
+    class Meta:
+        verbose_name = 'Рецепт'
+        verbose_name_plural = 'Составы Рецептов'
 
     def __str__(self):
         return f'{self.ingredient} {self.recipe}'
