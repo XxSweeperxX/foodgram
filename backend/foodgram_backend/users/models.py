@@ -1,36 +1,34 @@
-from django.contrib.auth import get_user_model
-from django.core.exceptions import ValidationError
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-User = get_user_model()
 
-
-class Subscription(models.Model):
-    follower = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='follower'
+class User(AbstractUser):
+    email = models.EmailField(
+        max_length=254,
+        verbose_name='email',
+        unique=True
     )
-    author = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='author'
+    first_name = models.CharField(
+        max_length=150,
+        verbose_name='first name',
+        blank=False
+    )
+    last_name = models.CharField(
+        max_length=150,
+        verbose_name='last name',
+        blank=False
+    )
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = (
+        'username',
+        'first_name',
+        'last_name',
+        'password'
     )
 
     class Meta:
-        verbose_name = 'Подписка'
-        verbose_name_plural = 'Подписки'
-        constraints = [
-            models.UniqueConstraint(
-                fields=('user', 'author'),
-                name='unique_follower_following'
-            )
-        ]
-
-    def clean(self):
-        if self.follower == self.author:
-            raise ValidationError('Нельзя подписаться на самого себя.')
-        super().save(self)
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
 
     def __str__(self):
-        return f'Пользователь {self.follower} подписался на {self.author}'
+        return self.username
