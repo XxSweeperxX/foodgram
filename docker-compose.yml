@@ -8,9 +8,9 @@ volumes:
 services:
 
   db:
-    image: postgres:13
+    container_name: foodgram_db
+    image: postgres:13.12-alpine
     env_file: .env
-    network_mode: host
     volumes:
       - pg_data:/var/lib/postgresql/data
 
@@ -32,6 +32,7 @@ services:
     volumes:
       - static:/frontend_static
     depends_on:
+      - db
       - backend
 
   gateway:
@@ -44,4 +45,6 @@ services:
     ports:
       - 8000:80
     depends_on:
+      - db
+      - backend
       - frontend

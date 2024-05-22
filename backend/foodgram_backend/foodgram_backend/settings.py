@@ -76,7 +76,7 @@ DATABASES = {
         'NAME': os.getenv('POSTGRES_DB', 'foodgram_db'),
         'USER': os.getenv('POSTGRES_USER', 'foodgram_user'),
         'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'foodgram_password'),
-        'HOST': os.getenv('DB_HOST', 'localhost'),
+        'HOST': os.getenv('DB_HOST', '127.0.0.1'),
         'PORT': os.getenv('DB_PORT', 5432)
     }
 }
@@ -103,6 +103,8 @@ LANGUAGE_CODE = 'ru-RU'
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
+
+USE_L10N = True
 
 USE_TZ = True
 
