@@ -4,7 +4,6 @@ from django.db import models
 
 from .constants import (
     MIN_VALUE,
-    MAX_LENGTH_SMALL,
     MAX_LENGTH_BIG
 )
 
@@ -40,22 +39,16 @@ class Tag(models.Model):
     slug = models.SlugField(
         max_length=MAX_LENGTH_BIG,
         null=True,
-        verbose_name='Слаг',
+        verbose_name='Slug',
         unique=True,
         validators=[RegexValidator(
             regex=r'^[-a-zA-Z0-9_]+$',
             message=(
-                'Недопустимое название слага! '
+                'Недопустимое название Slug! '
                 'Слаг может содержать только целые числа, '
                 'буквы или подчеркивания.'
             )
         )]
-    )
-    color = models.CharField(
-        max_length=MAX_LENGTH_SMALL,
-        null=True,
-        verbose_name='Цвет',
-        unique=True
     )
 
     class Meta:
@@ -68,15 +61,15 @@ class Tag(models.Model):
 
 
 class Recipe(models.Model):
-    name = models.CharField(
-        max_length=MAX_LENGTH_BIG,
-        verbose_name='Название рецепта',
-    )
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='recipes',
         verbose_name='Автор'
+    )
+    name = models.CharField(
+        max_length=MAX_LENGTH_BIG,
+        verbose_name='Название рецепта',
     )
     image = models.ImageField(
         verbose_name='Картинка рецепта',
@@ -141,7 +134,7 @@ class RecipeIngredient(models.Model):
             MinValueValidator(
                 MIN_VALUE,
                 message=f'Рецепт должен состоять минимум из {MIN_VALUE} '
-                        'ингридиента.'
+                        'ингридиента(-ов).'
             )
         ]
     )

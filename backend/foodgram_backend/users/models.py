@@ -5,18 +5,23 @@ from django.db import models
 class User(AbstractUser):
     email = models.EmailField(
         max_length=254,
-        verbose_name='email',
+        verbose_name='Электронная почта',
         unique=True
     )
     first_name = models.CharField(
         max_length=150,
-        verbose_name='first name',
+        verbose_name='Имя',
         blank=False
     )
     last_name = models.CharField(
         max_length=150,
-        verbose_name='last name',
+        verbose_name='Фамилия',
         blank=False
+    )
+    avatar = models.ImageField(
+        upload_to='avatars/',
+        blank=True,
+        null=True
     )
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = (
