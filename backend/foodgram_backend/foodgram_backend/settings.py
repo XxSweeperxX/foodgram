@@ -143,4 +143,5 @@ DJOSER = {
 
 # django-shortlink settings
 SHORTEN_PATH_LENGTH = 8
+HOST_ADDRESS = ALLOWED_HOSTS
 SHORTLINK_URL_BASE = 's/'

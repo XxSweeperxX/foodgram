@@ -1,5 +1,8 @@
 from django.db import models
-from .settings import *
+from django.conf import settings
+
+from shortener.utils import generate_rnd_string
+
 
 class ShortLink(models.Model):
     short_url = models.CharField(
@@ -24,6 +27,27 @@ class ShortLink(models.Model):
 
     @property
     def short_path(self):
-        return f'{HOST_ADDRESS}/{SHORTLINK_URL_BASE}{self.short_url}'
+        return (f'{settings.HOST_ADDRESS}/'
+                f'{settings.SHORTLINK_URL_BASE}{self.short_url}')
 
-    def
+    def save(
+            self,
+            force_insert=False,
+            force_update=False,
+            using=None,
+            update_fields=None
+    ):
+        if not self.short_url:
+            self.generate_new_short_url(commit=False)
+
+    def generate_new_short_url(self, commit):
+        while True:
+            url = generate_rnd_string()
+            if not ShortLink.objects.filter(short_url=url).exists():
+                break
+        self.short_url = url
+        if commit:
+            self.save()
+
+
+

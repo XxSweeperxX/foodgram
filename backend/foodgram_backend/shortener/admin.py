@@ -1,3 +1,12 @@
 from django.contrib import admin
 
-# Register your models here.
+from shortener.models import ShortLink
+
+
+@admin.register(ShortLink)
+class ShortLinkAdmin(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'full_url',
+        'short_url',
+    )
