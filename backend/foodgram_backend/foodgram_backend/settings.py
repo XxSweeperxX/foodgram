@@ -64,23 +64,23 @@ TEMPLATES = [
 WSGI_APPLICATION = 'foodgram_backend.wsgi.application'
 
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': os.getenv('POSTGRES_DB', 'foodgram_db'),
-#         'USER': os.getenv('POSTGRES_USER', 'foodgram_user'),
-#         'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'foodgram_password'),
-#         'HOST': os.getenv('DB_HOST', '127.0.0.1'),
-#         'PORT': os.getenv('DB_PORT', 5432)
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('POSTGRES_DB', 'foodgram_db'),
+        'USER': os.getenv('POSTGRES_USER', 'foodgram_user'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'foodgram_password'),
+        'HOST': os.getenv('DB_HOST', '127.0.0.1'),
+        'PORT': os.getenv('DB_PORT', 5432)
+    }
+}
 
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -141,7 +141,7 @@ DJOSER = {
     },
 }
 
-# django-shortlink settings
-SHORTEN_PATH_LENGTH = 8
-HOST_ADDRESS = ALLOWED_HOSTS
-SHORTLINK_URL_BASE = 's/'
+# shortener settings
+SHORTENER_PATH_LENGTH = 4
+SHORTENER_DOMAIN_ADDRESS = '127.0.0.1:8000'
+SHORTENER_URL_BASE = 's/'

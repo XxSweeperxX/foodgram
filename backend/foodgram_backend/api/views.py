@@ -1,6 +1,5 @@
 from django.contrib.auth import get_user_model
 from django.core.exceptions import BadRequest
-from django.conf import settings
 from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
@@ -141,10 +140,16 @@ class RecipeViewSet(ModelViewSet):
     )
     def get_link(self, request, pk=None):
         self.get_object()
-        s = ShortLink.objects.create(
-            full_url=request.build_absolute_uri().replace(
-                'get-link/', '').replace('api/', '')
-        )
+
+        path = request.build_absolute_uri().replace(
+            'get-link/', '').replace('api/', '')
+        s = ShortLink.objects.filter(full_url=path).first()
+
+        if not s:
+            s = ShortLink.objects.create(
+                full_url=path
+            )
+
         serializer = ShortLinkSerializer(
             data={'short_link': s.short_path},
             context={'request': request}

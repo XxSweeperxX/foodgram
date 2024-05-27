@@ -397,4 +397,3 @@ class RecipePartialSerializer(serializers.ModelSerializer):
 
 class ShortLinkSerializer(serializers.Serializer):
     short_link = serializers.CharField()
-

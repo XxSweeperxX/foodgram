@@ -6,6 +6,6 @@ from .views import map_link
 
 urlpatterns = [
     re_path(
-        '^{}(?P<path>[a-zA-Z0-9 _-]+)$'.format(settings.SHORTLINK_URL_BASE),
+        '^{}(?P<path>[a-zA-Z0-9 _-]+)$'.format(settings.SHORTENER_URL_BASE),
         map_link, name='map_link'),
 ]
