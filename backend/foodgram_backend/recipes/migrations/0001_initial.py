@@ -92,7 +92,6 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=200, unique=True, verbose_name='Название')),
                 ('slug', models.SlugField(max_length=200, null=True, unique=True, validators=[django.core.validators.RegexValidator(message='Недопустимое название слага! Слаг может содержать только целые числа, буквы или подчеркивания.', regex='^[-a-zA-Z0-9_]+$')], verbose_name='Слаг')),
-                ('color', models.CharField(max_length=7, null=True, unique=True, verbose_name='Цвет')),
             ],
             options={
                 'verbose_name': 'Тег',

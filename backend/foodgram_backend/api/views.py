@@ -13,14 +13,18 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
 from api.permissions import AdminOrReadOnly, AuthorOrReadOnly
-from api.serializers import (FavoriteSerializer, IngredientSerializer,
-                             MyUserSerializer, RecipeFullSerializer,
-                             RecipePartialSerializer, RecipeSerializer,
-                             ShoppingCartSerializer, SubscriptionSerializer,
-                             TagSerializer, UserSubscriptionSerializer)
+from api.serializers import (
+    FavoriteSerializer, IngredientSerializer, MyUserSerializer,
+    UserAvatarSerializer, RecipeFullSerializer, RecipePartialSerializer,
+    RecipeSerializer, ShoppingCartSerializer, SubscriptionSerializer,
+    TagSerializer, UserSubscriptionSerializer, ShortLinkSerializer
+)
 from recipes.filters import IngredientFilter, RecipeFilter
-from recipes.models import (Favorite, Ingredient, Recipe, RecipeIngredient,
-                            ShoppingCart, Subscription, Tag)
+from recipes.models import (
+    Favorite, Ingredient, Recipe, RecipeIngredient,
+    ShoppingCart, Subscription, Tag
+)
+from shortener.models import ShortLink
 
 User = get_user_model()
 
@@ -129,6 +133,33 @@ class RecipeViewSet(ModelViewSet):
         shopping_list = self.ingredients_to_txt(ingredients)
         return HttpResponse(shopping_list, content_type='text/plain')
 
+    @action(
+        methods=['get'],
+        detail=True,
+        url_path='get-link'
+    )
+    def get_link(self, request, pk=None):
+        self.get_object()
+
+        path = request.build_absolute_uri().replace(
+            'get-link/', '').replace('api/', '')
+        s = ShortLink.objects.filter(full_url=path).first()
+
+        if not s:
+            s = ShortLink.objects.create(
+                full_url=path
+            )
+
+        serializer = ShortLinkSerializer(
+            data={'short_link': s.short_path},
+            context={'request': request}
+        )
+        serializer.is_valid(raise_exception=True)
+        return Response(
+            {'short-link': serializer.data['short_link']},
+            status=status.HTTP_200_OK
+        )
+
     def get_serializer_class(self):
         if self.request.method == 'GET':
             return RecipeSerializer
@@ -147,7 +178,7 @@ class CustomUserViewSet(UserViewSet):
         permission_classes=(IsAuthenticated,)
     )
     def me(self, request):
-        if request.method == 'PATCH':
+        if request.method in ['PATCH']:
             serializer = MyUserSerializer(
                 request.user,
                 data=request.data,
@@ -161,6 +192,29 @@ class CustomUserViewSet(UserViewSet):
             request.user,
             context={'request': request}
         )
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(
+        methods=['put', 'delete'],
+        detail=False,
+        permission_classes=(IsAuthenticated,),
+        url_path='me/avatar',
+    )
+    def avatar(self, request):
+        data = request.data
+        if 'avatar' not in data:
+            if request.method == 'PUT':
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+            data = {'avatar': None}
+        instance = self.get_instance()
+        serializer = UserAvatarSerializer(instance, data=data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        if request.method == 'DELETE':
+            return Response(
+                serializer.data,
+                status=status.HTTP_204_NO_CONTENT
+            )
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(

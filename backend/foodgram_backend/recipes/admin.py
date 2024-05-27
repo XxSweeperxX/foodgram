@@ -20,22 +20,25 @@ class IngredientAdmin(admin.ModelAdmin):
         'name',
         'measurement_unit',
     )
-    list_filter = ('name',)
+    search_fields = ('name',)
 
 
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
     list_display = (
         'name',
-        'author',
-        'text',
-        'cooking_time',
-        'image',
-        'pub_date',
+        'author'
     )
+    readonly_fields = ['get_favorite']
+    search_fields = (
+        'author__username',
+        'name'
+    )
+    list_filter = ('tags',)
 
-    list_filter = ('author', 'name', 'tags',)
-    filter_horizontal = ('tags', 'ingredients',)
+    @admin.display(description='Добавлено в избранное')
+    def get_favorite(self, obj):
+        return f'{obj.favorites.count()} раз'
 
 
 @admin.register(RecipeIngredient)
@@ -51,7 +54,6 @@ class RecipeIngredientAdmin(admin.ModelAdmin):
 class TagAdmin(admin.ModelAdmin):
     list_display = (
         'name',
-        'color',
         'slug',
     )
 

@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from django.core.files.base import ContentFile
 from django.shortcuts import get_object_or_404
 from djoser.serializers import UserCreateSerializer, UserSerializer
+from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
@@ -32,7 +33,6 @@ class TagSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'name',
-            'color',
             'slug'
         )
 
@@ -179,7 +179,8 @@ class MyUserSerializer(UserSerializer):
             'username',
             'first_name',
             'last_name',
-            'is_subscribed'
+            'is_subscribed',
+            'avatar'
         )
 
     def get_is_subscribed(self, object):
@@ -187,6 +188,18 @@ class MyUserSerializer(UserSerializer):
         if request is None or request.user.is_anonymous:
             return False
         return object.author.filter(follower=request.user).exists()
+
+
+class UserAvatarSerializer(serializers.ModelSerializer):
+    avatar = Base64ImageField(
+        allow_null=True
+    )
+
+    class Meta:
+        model = User
+        fields = (
+            'avatar',
+        )
 
 
 class UserSubscriptionSerializer(MyUserSerializer):
@@ -203,7 +216,8 @@ class UserSubscriptionSerializer(MyUserSerializer):
             'last_name',
             'is_subscribed',
             'recipes',
-            'recipes_count'
+            'recipes_count',
+            'avatar'
         )
 
     def get_recipes(self, obj):
@@ -379,3 +393,7 @@ class RecipePartialSerializer(serializers.ModelSerializer):
             'image',
             'cooking_time'
         )
+
+
+class ShortLinkSerializer(serializers.Serializer):
+    short_link = serializers.CharField()

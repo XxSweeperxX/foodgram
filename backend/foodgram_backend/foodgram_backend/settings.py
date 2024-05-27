@@ -14,7 +14,6 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = os.getenv('DEBUG', 'False')
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1 localhost').split()
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -23,14 +22,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'django_filters',
     'rest_framework',
     'rest_framework.authtoken',
-    'django_filters',
 
     'api.apps.ApiConfig',
     'recipes.apps.RecipesConfig',
-    'users.apps.UsersConfig'
+    'users.apps.UsersConfig',
+    'shortener.apps.ShortenerConfig',
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -139,3 +140,8 @@ DJOSER = {
         'user_list': ['rest_framework.permissions.AllowAny'],
     },
 }
+
+# shortener settings
+SHORTENER_PATH_LENGTH = 4
+SHORTENER_DOMAIN_ADDRESS = '127.0.0.1:8000'
+SHORTENER_URL_BASE = 's/'
