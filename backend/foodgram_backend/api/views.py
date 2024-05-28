@@ -142,7 +142,7 @@ class RecipeViewSet(ModelViewSet):
         self.get_object()
 
         path = request.build_absolute_uri().replace(
-            'get-link/', '').replace('api/', '')
+            '/get-link/', '').replace('api/', '')
         s = ShortLink.objects.filter(full_url=path).first()
 
         if not s:
