@@ -9,33 +9,42 @@ services:
 
   db:
     container_name: PostgreSQL
-    image: postgres:13
+    image: postgres:13.12-alpine
     env_file: .env
     volumes:
       - pg_data:/var/lib/postgresql/data
 
   backend:
     container_name: foodgram_backend
-    build: ./backend/foodgram_backend/
+    image: vitaliitamilin/foodgram_backend
     env_file: .env
     volumes:
       - static:/backend_static
       - media:/app/media/
+    depends_on:
+      - db
 
   frontend:
     container_name: foodgram_frontend
+    image: vitaliitamilin/foodgram_frontend
     env_file: .env
-    build: ../frontend
     command: cp -r /app/build/. /frontend_static/
     volumes:
       - static:/frontend_static
+    depends_on:
+      - db
+      - backend
 
-  nginx:
-    container_name: infra
-    build: ./gateway/
+  gateway:
+    container_name: nginx
+    image: vitaliitamilin/foodgram_gateway
     env_file: .env
     volumes:
       - static:/staticfiles/
       - media:/mediafiles/
     ports:
-      - 8000:80
+      - 7000:80
+    depends_on:
+      - db
+      - backend
+      - frontend

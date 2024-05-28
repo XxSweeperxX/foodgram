@@ -63,14 +63,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'foodgram_backend.wsgi.application'
 
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -143,5 +135,5 @@ DJOSER = {
 
 # shortener settings
 SHORTENER_PATH_LENGTH = 4
-SHORTENER_DOMAIN_ADDRESS = '127.0.0.1:8000'
+SHORTENER_DOMAIN_ADDRESS = 'foodgram.space'
 SHORTENER_URL_BASE = 's/'
