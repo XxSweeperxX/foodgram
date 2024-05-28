@@ -31,7 +31,7 @@ jobs:
           python -m pip install -U pip
           pip install flake8==6.0.0 flake8-isort==6.0.0
           pip install -r ./backend/foodgram_backend/requirements.txt
-      - name: Tests with flake8
+      - name: Tests with  flake8
         env:
           POSTGRES_USER: foodgram_user
           POSTGRES_PASSWORD: foodgram_password
