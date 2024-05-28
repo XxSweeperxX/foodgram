@@ -132,6 +132,10 @@ DJOSER = {
     },
 }
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://foodgram.space"
+]
+
 # shortener settings
 SHORTENER_PATH_LENGTH = 4
 SHORTENER_DOMAIN_ADDRESS = 'foodgram.space'
