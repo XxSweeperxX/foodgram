@@ -3,7 +3,7 @@ name: Foodgram release
 on:
   push:
     branches:
-      - main_dev
+      - main
 
 jobs:
   tests:
@@ -141,7 +141,7 @@ jobs:
   send_message:
     runs-on: ubuntu-latest
     needs: deploy
-    if: github.ref == 'refs/heads/main_dev'
+    if: github.ref == 'refs/heads/main'
     steps:
       - name: Send message
         uses: appleboy/telegram-action@master
