@@ -1,1 +1,1 @@
-Проект работает по адресу https://foodgram.space
+Проект работает по адресу - https://foodgram.space
