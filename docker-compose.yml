@@ -43,7 +43,7 @@ services:
       - static:/staticfiles/
       - media:/mediafiles/
     ports:
-      - 8000:80
+      - 7000:80
     depends_on:
       - db
       - backend
