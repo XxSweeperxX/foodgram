@@ -8,7 +8,7 @@ from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
-from recipes.constants import MIN_VALUE
+from recipes.constants import MIN_VALUE, MAX_VALUE
 from recipes.models import (Favorite, Ingredient, Recipe, RecipeIngredient,
                             ShoppingCart, Subscription, Tag)
 
@@ -42,7 +42,8 @@ class IngredientRecipeSerializer(serializers.ModelSerializer):
         queryset=Ingredient.objects.all()
     )
     amount = serializers.IntegerField(
-        min_value=MIN_VALUE
+        min_value=MIN_VALUE,
+        max_value=MAX_VALUE
     )
 
     class Meta:
@@ -293,7 +294,8 @@ class RecipeFullSerializer(serializers.ModelSerializer):
     image = Base64ImageField(use_url=True, max_length=None)
     author = MyUserSerializer(read_only=True)
     cooking_time = serializers.IntegerField(
-        min_value=MIN_VALUE
+        min_value=MIN_VALUE,
+        max_value=MAX_VALUE
     )
 
     class Meta:
