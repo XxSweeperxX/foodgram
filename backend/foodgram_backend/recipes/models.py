@@ -1,9 +1,12 @@
 from django.contrib.auth import get_user_model
-from django.core.validators import (MinValueValidator, RegexValidator)
+from django.core.validators import (
+    MinValueValidator, MaxValueValidator, RegexValidator
+)
 from django.db import models
 
-from .constants import (
+from recipes.constants import (
     MIN_VALUE,
+    MAX_VALUE,
     MAX_LENGTH_BIG
 )
 
@@ -90,13 +93,18 @@ class Recipe(models.Model):
         related_name='recipes',
         verbose_name='Теги'
     )
-    cooking_time = models.PositiveIntegerField(
+    cooking_time = models.PositiveSmallIntegerField(
         verbose_name='Время приготовления, мин.',
         validators=[
             MinValueValidator(
                 MIN_VALUE,
                 message='Минимальное время приготовления '
                         f'- {MIN_VALUE} мин.'
+            ),
+            MaxValueValidator(
+                MAX_VALUE,
+                message='Максимальное время приготовления '
+                        f'- {MAX_VALUE} мин.'
             )
         ],
     )
@@ -107,7 +115,7 @@ class Recipe(models.Model):
     )
 
     class Meta:
-        ordering = ('-pub_date', )
+        ordering = ('-pub_date',)
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
 
@@ -128,13 +136,18 @@ class RecipeIngredient(models.Model):
         on_delete=models.CASCADE,
         verbose_name='Рецепт'
     )
-    amount = models.PositiveIntegerField(
+    amount = models.PositiveSmallIntegerField(
         verbose_name='Количество',
         validators=[
             MinValueValidator(
                 MIN_VALUE,
                 message=f'Рецепт должен состоять минимум из {MIN_VALUE} '
                         'ингридиента(-ов).'
+            ),
+            MaxValueValidator(
+                MAX_VALUE,
+                message=f'Рецепт должен состоять максимум из {MAX_VALUE} '
+                        'ингридиентов.'
             )
         ]
     )
@@ -198,7 +211,7 @@ class ShoppingCart(models.Model):
     )
 
     class Meta:
-        ordering = ('user', )
+        ordering = ('user',)
         verbose_name = 'список покупок'
         verbose_name_plural = 'Списки покупок'
         constraints = (
@@ -227,7 +240,7 @@ class Subscription(models.Model):
     )
 
     class Meta:
-        ordering = ('id', )
+        ordering = ('id',)
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
         constraints = (
