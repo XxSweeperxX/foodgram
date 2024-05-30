@@ -77,14 +77,12 @@ class RecipeViewSet(ModelViewSet):
 
     @staticmethod
     def ingredients_to_txt(ingredients):
-        shopping_list = ''
-        for ingredient in ingredients:
-            shopping_list += (
-                f"{ingredient['ingredient__name']}  - "
-                f"{ingredient['sum']}"
-                f"({ingredient['ingredient__measurement_unit']})\n"
-            )
-        return shopping_list
+        shopping_list = [
+            f"{ingredient['ingredient__name']} - "
+            f"{ingredient['sum']}"
+            f"({ingredient['ingredient__measurement_unit']})\n"
+            for ingredient in ingredients]
+        return ''.join(shopping_list)
 
     @staticmethod
     def add_to(current_serializer, request, pk):
@@ -143,15 +141,15 @@ class RecipeViewSet(ModelViewSet):
 
         path = request.build_absolute_uri().replace(
             '/get-link/', '').replace('api/', '')
-        s = ShortLink.objects.filter(full_url=path).first()
+        short_link = ShortLink.objects.filter(full_url=path).first()
 
-        if not s:
-            s = ShortLink.objects.create(
+        if not short_link:
+            short_link = ShortLink.objects.create(
                 full_url=path
             )
 
         serializer = ShortLinkSerializer(
-            data={'short_link': s.short_path},
+            data={'short_link': short_link.short_path},
             context={'request': request}
         )
         serializer.is_valid(raise_exception=True)
