@@ -9,6 +9,7 @@
 [![GitHub%20Actions](https://img.shields.io/badge/-GitHub%20Actions-464646?style=flat-square&logo=GitHub%20actions)](https://github.com/features/actions)
 
 Проект доступен по адресу - https://foodgram.space
+
 Данные для входа в админ-зону Django:
 ```
 Email - vitaliktamilin@gmail.com
