@@ -17,12 +17,13 @@ class ShortLink(models.Model):
         max_length=500,
     )
 
-    def __str__(self):
-        return f'{self.full_url} - {self.short_url}'
-
     class Meta:
+        ordering = ('id',)
         verbose_name = 'короткая ссылка'
         verbose_name_plural = 'Короткие ссылки'
+
+    def __str__(self):
+        return f'{self.full_url} - {self.short_url}'
 
     @property
     def short_path(self):
