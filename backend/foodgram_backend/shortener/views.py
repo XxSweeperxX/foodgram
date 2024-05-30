@@ -1,11 +1,13 @@
 from django.http import HttpResponseRedirect, Http404
+from django.shortcuts import get_object_or_404
 
 from .models import ShortLink
 
 
 def map_link(request, **kwargs):
     path = kwargs.get('path')
-    s = ShortLink.objects.filter(short_url=path).first()
-    if s:
-        return HttpResponseRedirect(s.full_url)
-    raise Http404
+    short_link = get_object_or_404(
+        ShortLink,
+        short_url=path
+    )
+    return HttpResponseRedirect(short_link.full_url)
